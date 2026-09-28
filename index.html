@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz Bíblico - Rut</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #f4efe6;
+    margin: 0;
+    padding: 20px;
+    color: #333;
+}
+
+.container {
+    max-width: 600px;
+    margin: auto;
+    background: white;
+    padding: 25px;
+    border-radius: 18px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+}
+
+h1 {
+    text-align: center;
+    color: #704214;
+}
+
+.subtitle {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.question {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.option {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 10px;
+    background: #e8dcc8;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.option:hover {
+    background: #d6c3a5;
+}
+
+#next {
+    display: none;
+    width: 100%;
+    padding: 14px;
+    margin-top: 20px;
+    background: #704214;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 17px;
+}
+
+#result {
+    text-align: center;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.correct {
+    background: #9bd49b !important;
+}
+
+.incorrect {
+    background: #e59a9a !important;
+}
+
+.progress {
+    text-align: center;
+    margin-bottom: 15px;
+    color: #704214;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>📖 QUIZ BÍBLICO: RUT</h1>
+
+<p class="subtitle">
+De dificultad media hasta <b>Modo Rabino</b>
+</p>
+
+<div id="quiz">
+
+<div class="progress" id="progress"></div>
+
+<div class="question" id="question"></div>
+
+<div id="options"></div>
+
+<button id="next" onclick="nextQuestion()">
+Siguiente pregunta →
+</button>
+
+</div>
+
+<div id="result" style="display:none;"></div>
+
+</div>
+
+<script>
+
+const questions = [
+
+{
+question: "1. ¿Por qué salió la familia de Noemí de Belén hacia Moab?",
+options: [
+"Por una guerra",
+"Por hambre",
+"Por una enfermedad",
+"Por una orden del rey"
+],
+answer: 1
+},
+
+{
+question: "2. ¿De qué pueblo era Rut?",
+options: [
+"Egipcia",
+"Moabita",
+"Filistea",
+"Aramea"
+],
+answer: 1
+},
+
+{
+question: "3. ¿Qué respondió Rut cuando Noemí le pidió que regresara a su pueblo?",
+options: [
+"Que volvería después",
+"Que iría con ella",
+"Que buscaría a otro esposo",
+"Que regresaría sola"
+],
+answer: 1
+},
+
+{
+question: "4. ¿Cómo consiguió Rut alimento al llegar a Belén?",
+options: [
+"Comprándolo",
+"Trabajando en un mercado",
+"Recogiendo espigas",
+"Pidiendo a los sacerdotes"
+],
+answer: 2
+},
+
+{
+question: "5. ¿Quién era Booz?",
+options: [
+"Un sacerdote",
+"Un pariente de Elimelec",
+"Un rey de Moab",
+"Un juez de Israel"
+],
+answer: 1
+},
+
+{
+question: "6. ¿Qué significa que Booz fuera un 'pariente cercano'?",
+options: [
+"Podía actuar como redentor familiar",
+"Era hermano de Rut",
+"Era sacerdote",
+"Era dueño de Belén"
+],
+answer: 0
+},
+
+{
+question: "7. ¿Qué hizo Rut en la era a medianoche siguiendo el consejo de Noemí?",
+options: [
+"Se escondió entre las espigas",
+"Se acostó a los pies de Booz",
+"Regresó a Moab",
+"Buscó al pariente más cercano"
+],
+answer: 1
+},
+
+{
+question: "8. ¿Qué derecho familiar estaba relacionado con la acción de Booz?",
+options: [
+"El derecho del primogénito",
+"El derecho de redención",
+"El derecho sacerdotal",
+"El derecho del rey"
+],
+answer: 1
+},
+
+{
+question: "9. ¿Por qué el pariente más cercano no quiso redimir la propiedad de Noemí?",
+options: [
+"Porque no conocía a Noemí",
+"Porque temió perjudicar su propia herencia",
+"Porque Booz era más rico",
+"Porque quería regresar a Moab"
+],
+answer: 1
+},
+
+{
+question: "10. MODO RABINO 🧠: ¿Qué lugar ocupa Rut en la genealogía de Jesús?",
+options: [
+"Fue madre de David",
+"Fue esposa de David",
+"Fue bisabuela de David",
+"Fue hermana de David"
+],
+answer: 2
+}
+
+];
+
+let currentQuestion = 0;
+let score = 0;
+let answered = false;
+
+function loadQuestion() {
+
+answered = false;
+
+const q = questions[currentQuestion];
+
+document.getElementById("progress").innerText =
+"Pregunta " + (currentQuestion + 1) + " de " + questions.length;
+
+document.getElementById("question").innerText = q.question;
+
+const optionsDiv = document.getElementById("options");
+optionsDiv.innerHTML = "";
+
+q.options.forEach((option, index) => {
+
+const button = document.createElement("button");
+
+button.innerText = option;
+button.className = "option";
+
+button.onclick = function() {
+checkAnswer(index, button);
+};
+
+optionsDiv.appendChild(button);
+
+});
+
+document.getElementById("next").style.display = "none";
+
+}
+
+function checkAnswer(index, button) {
+
+if (answered) return;
+
+answered = true;
+
+const q = questions[currentQuestion];
+
+const buttons = document.querySelectorAll(".option");
+
+if (index === q.answer) {
+
+button.classList.add("correct");
+score++;
+
+} else {
+
+button.classList.add("incorrect");
+buttons[q.answer].classList.add("correct");
+
+}
+
+document.getElementById("next").style.display = "block";
+
+}
+
+function nextQuestion() {
+
+currentQuestion++;
+
+if (currentQuestion < questions.length) {
+
+loadQuestion();
+
+} else {
+
+showResult();
+
+}
+
+}
+
+function showResult() {
+
+document.getElementById("quiz").style.display = "none";
+
+const result = document.getElementById("result");
+
+result.style.display = "block";
+
+let message = "";
+
+if (score <= 3) {
+
+message = "📖 Sigue estudiando el libro de Rut.";
+
+} else if (score <= 6) {
+
+message = "👏 Buen conocimiento de Rut.";
+
+} else if (score <= 8) {
+
+message = "🔥 Muy buen conocimiento bíblico.";
+
+} else if (score === 9) {
+
+message = "🏆 Excelente dominio del libro de Rut.";
+
+} else {
+
+message = "👑 ¡MODO RABINO SUPERADO!";
+
+}
+
+result.innerHTML =
+"🎉 Quiz terminado 🎉<br><br>" +
+"Tu puntuación: " + score + " / " + questions.length +
+"<br><br>" + message;
+
+}
+
+loadQuestion();
+
+</script>
+
+</body>
+</html>
