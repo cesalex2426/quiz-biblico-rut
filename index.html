@@ -65,6 +65,55 @@ input {
     font-size: 22px;
     font-weight: bold;
 }
+
+#temporizador {
+    text-align: center;
+    font-size: 28px;
+    font-weight: bold;
+    color: #b22222;
+    margin: 15px 0;
+}
+
+#sonidoBtn {
+    background: #d8c3a5;
+    font-size: 15px;
+}
+
+#mensaje {
+    text-align: center;
+    padding: 15px;
+    border-radius: 12px;
+    margin-top: 15px;
+    font-size: 17px;
+}
+
+.correcto {
+    background: #d9f2d9;
+    color: #176b17;
+}
+
+.incorrecto {
+    background: #f8d7da;
+    color: #8b0000;
+}
+
+#siguienteBtn {
+    background: #704214;
+    color: white;
+    font-weight: bold;
+}
+
+.cita {
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.modo-rabino {
+    color: #704214;
+    font-weight: bold;
+    text-align: center;
+    font-size: 18px;
+}
 </style>
 </head>
 
@@ -83,6 +132,10 @@ Escribe el nombre de tu equipo para comenzar.
 </p>
 
 <input type="text" id="nombreEquipo" placeholder="Nombre del equipo">
+
+<button id="sonidoBtn" onclick="cambiarSonido()">
+🔊 Sonido: ACTIVADO
+</button>
 
 <button onclick="comenzarQuiz()">
 🚀 Comenzar Quiz
@@ -111,6 +164,10 @@ import {
 "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 
+/* =========================
+   FIREBASE
+========================= */
+
 const firebaseConfig = {
 
 apiKey: "AIzaSyDKZZobSUGwY8j_6btwH4YifDsZgPTh-ms",
@@ -129,93 +186,273 @@ appId: "1:379404224053:web:e9c9439d62f3898197937c"
 
 };
 
-
 const app = initializeApp(firebaseConfig);
 
 const db = getDatabase(app);
 
 
+/* =========================
+   PREGUNTAS
+========================= */
+
 const preguntas = [
 
 {
 pregunta: "¿Por qué salió la familia de Noemí de Belén hacia Moab?",
-opciones: ["Por hambre", "Por guerra", "Por una enfermedad"],
-correcta: 0
-},
-
-{
-pregunta: "¿De dónde era Rut?",
-opciones: ["Egipto", "Moab", "Filistea"],
-correcta: 1
-},
-
-{
-pregunta: "¿Cómo se llamaba el esposo de Noemí?",
-opciones: ["Booz", "Obed", "Elimelec"],
-correcta: 2
-},
-
-{
-pregunta: "¿Qué estaba cosechando Rut cuando Booz la conoció?",
-opciones: ["Trigo", "Cebada", "Uvas"],
-correcta: 1
-},
-
-{
-pregunta: "¿Qué relación tenía Rut con Noemí?",
-opciones: ["Hermana", "Hija", "Nuera"],
-correcta: 2
-},
-
-{
-pregunta: "¿Qué hizo Rut a medianoche en la era por consejo de Noemí?",
 opciones: [
-"Se escondió en la era",
-"Se acostó a los pies de Booz",
-"Regresó a Moab"
+"Por guerra",
+"Por hambre",
+"Por enfermedad",
+"Por sequía"
 ],
-correcta: 1
+correcta: 1,
+cita: "Rut 1:1"
 },
 
 {
-pregunta: "¿Quién tenía el derecho de redimir antes que Booz?",
+pregunta: "¿Qué declaró Rut a Noemí al decidir quedarse con ella?",
 opciones: [
-"El hermano de Noemí",
-"El hijo de Rut",
-"Otro pariente más cercano"
+"Tu casa será mi casa",
+"Tu tierra será mi tierra",
+"Tu familia será mi familia",
+"Tu pueblo será mi pueblo"
 ],
-correcta: 2
+correcta: 3,
+cita: "Rut 1:16"
 },
 
 {
-pregunta: "¿Qué objeto se quitaba como señal en la transacción de redención?",
-opciones: ["Un anillo", "Una sandalia", "Un manto"],
-correcta: 1
+pregunta: "¿Qué recogía Rut en los campos al comenzar la cosecha?",
+opciones: [
+"Cebada",
+"Trigo",
+"Uvas",
+"Higos"
+],
+correcta: 0,
+cita: "Rut 2:2–3, 23"
+},
+
+{
+pregunta: "¿Qué ordenó Booz a sus trabajadores respecto a Rut?",
+opciones: [
+"No permitir que recogiera",
+"Enviar a Rut a otro campo",
+"Dejar que espigara y no reprenderla",
+"Entregarle todo el campo"
+],
+correcta: 2,
+cita: "Rut 2:15–16"
+},
+
+{
+pregunta: "¿Bajo qué protección dijo Booz que Rut había venido a refugiarse?",
+opciones: [
+"Bajo la casa de Israel",
+"Bajo las alas de Jehová",
+"Bajo la protección de Noemí",
+"Bajo la autoridad de Booz"
+],
+correcta: 1,
+cita: "Rut 2:12"
+},
+
+{
+pregunta: "¿Qué pidió Rut a Booz al decir: «Extiende el borde de tu capa sobre tu sierva»?",
+opciones: [
+"Protección",
+"Redención",
+"Matrimonio",
+"Todas las anteriores"
+],
+correcta: 1,
+cita: "Rut 3:9"
+},
+
+{
+pregunta: "¿Por qué el pariente más cercano no quiso redimir la heredad?",
+opciones: [
+"Porque no conocía a Rut",
+"Porque no tenía dinero",
+"Porque Booz tenía mayor autoridad",
+"Porque temía perjudicar su heredad"
+],
+correcta: 3,
+cita: "Rut 4:5–6"
+},
+
+{
+pregunta: "¿Qué objeto se utilizó como señal para confirmar la transacción?",
+opciones: [
+"Una sandalia",
+"Un anillo",
+"Un manto",
+"Una vara"
+],
+correcta: 0,
+cita: "Rut 4:7–8"
 },
 
 {
 pregunta: "¿Quién fue la madre de Booz?",
-opciones: ["Noemí", "Rut", "Rahab"],
-correcta: 2
+opciones: [
+"Rut",
+"Noemí",
+"Rahab",
+"Abigail"
+],
+correcta: 2,
+cita: "Mateo 1:5"
 },
 
 {
-pregunta: "MODO RABINO 🧠: ¿Cuál es la línea de descendencia correcta hasta David?",
+pregunta: "👑 MODO RABINO: ¿Cuál es la línea correcta desde Rut hasta Jesús?",
 opciones: [
-"Rut → Booz → Obed → Isaí → David",
-"Rut → Obed → Booz → Isaí → David",
-"Booz → Rut → Isaí → Obed → David"
+"Rut → Booz → Isaí → Obed → David → Jesús",
+"Rut → Obed → Booz → David → Isaí → Jesús",
+"Rut → Booz → Obed → Isaí → David → Jesús",
+"Rut → Booz → David → Obed → Isaí → Jesús"
 ],
-correcta: 0
+correcta: 2,
+cita: "Rut 4:17–22; Mateo 1:5–6, 16"
 }
 
 ];
 
 
+/* =========================
+   VARIABLES
+========================= */
+
 let preguntaActual = 0;
 let puntuacion = 0;
 let nombreEquipo = "";
+let tiempoRestante = 0;
+let intervalo = null;
+let respondida = false;
+let sonidoActivado = true;
+let audioContext = null;
 
+
+/* =========================
+   SONIDOS
+========================= */
+
+function iniciarAudio() {
+
+if (!audioContext) {
+    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+}
+
+if (audioContext.state === "suspended") {
+    audioContext.resume();
+}
+
+}
+
+
+function sonidoNota(frecuencia, duracion, tipo = "sine") {
+
+if (!sonidoActivado) return;
+
+iniciarAudio();
+
+const oscilador = audioContext.createOscillator();
+const ganancia = audioContext.createGain();
+
+oscilador.type = tipo;
+oscilador.frequency.value = frecuencia;
+
+ganancia.gain.setValueAtTime(0.15, audioContext.currentTime);
+
+ganancia.gain.exponentialRampToValueAtTime(
+0.001,
+audioContext.currentTime + duracion
+);
+
+oscilador.connect(ganancia);
+ganancia.connect(audioContext.destination);
+
+oscilador.start();
+
+oscilador.stop(
+audioContext.currentTime + duracion
+);
+
+}
+
+
+function sonidoCorrecto() {
+
+if (!sonidoActivado) return;
+
+sonidoNota(523, 0.15);
+setTimeout(() => sonidoNota(659, 0.15), 120);
+setTimeout(() => sonidoNota(784, 0.25), 240);
+
+}
+
+
+function sonidoIncorrecto() {
+
+if (!sonidoActivado) return;
+
+sonidoNota(220, 0.25, "sawtooth");
+setTimeout(() => sonidoNota(165, 0.35, "sawtooth"), 180);
+
+}
+
+
+function sonidoTiempo() {
+
+if (!sonidoActivado) return;
+
+sonidoNota(300, 0.2);
+setTimeout(() => sonidoNota(200, 0.3), 220);
+
+}
+
+
+function sonidoGanador() {
+
+if (!sonidoActivado) return;
+
+sonidoNota(523, 0.15);
+setTimeout(() => sonidoNota(659, 0.15), 150);
+setTimeout(() => sonidoNota(784, 0.15), 300);
+setTimeout(() => sonidoNota(1046, 0.45), 450);
+
+}
+
+
+/* =========================
+   SONIDO ACTIVAR/DESACTIVAR
+========================= */
+
+window.cambiarSonido = function() {
+
+sonidoActivado = !sonidoActivado;
+
+const boton = document.getElementById("sonidoBtn");
+
+if (sonidoActivado) {
+
+boton.innerHTML = "🔊 Sonido: ACTIVADO";
+
+iniciarAudio();
+
+} else {
+
+boton.innerHTML = "🔇 Sonido: DESACTIVADO";
+
+}
+
+};
+
+
+/* =========================
+   COMENZAR
+========================= */
 
 window.comenzarQuiz = function() {
 
@@ -230,6 +467,8 @@ return;
 
 }
 
+iniciarAudio();
+
 document.getElementById("inicio").style.display = "none";
 
 document.getElementById("quiz").style.display = "block";
@@ -239,9 +478,42 @@ mostrarPregunta();
 };
 
 
+/* =========================
+   TIEMPO
+========================= */
+
+function obtenerTiempo() {
+
+if (preguntaActual <= 2) {
+    return 10;
+}
+
+if (preguntaActual <= 5) {
+    return 12;
+}
+
+if (preguntaActual <= 8) {
+    return 15;
+}
+
+return 20;
+
+}
+
+
+/* =========================
+   MOSTRAR PREGUNTA
+========================= */
+
 function mostrarPregunta() {
 
+clearInterval(intervalo);
+
+respondida = false;
+
 const p = preguntas[preguntaActual];
+
+tiempoRestante = obtenerTiempo();
 
 const quiz = document.getElementById("quiz");
 
@@ -249,7 +521,19 @@ quiz.innerHTML = `
 
 <h2>Pregunta ${preguntaActual + 1} de ${preguntas.length}</h2>
 
+<div id="temporizador">
+⏱️ ${tiempoRestante}
+</div>
+
+${preguntaActual === 9 ? `
+<div class="modo-rabino">
+👑 MODO RABINO
+</div>
+` : ""}
+
 <h3>${p.pregunta}</h3>
+
+<div id="opciones">
 
 ${p.opciones.map((opcion, indice) => `
 
@@ -259,26 +543,173 @@ ${opcion}
 
 `).join("")}
 
+</div>
+
+<div id="mensaje"></div>
+
+`;
+
+iniciarTemporizador();
+
+}
+
+
+/* =========================
+   TEMPORIZADOR
+========================= */
+
+function iniciarTemporizador() {
+
+intervalo = setInterval(() => {
+
+tiempoRestante--;
+
+const reloj = document.getElementById("temporizador");
+
+if (reloj) {
+    reloj.innerHTML = `⏱️ ${tiempoRestante}`;
+}
+
+if (tiempoRestante <= 0) {
+
+clearInterval(intervalo);
+
+tiempoAgotado();
+
+}
+
+}, 1000);
+
+}
+
+
+/* =========================
+   TIEMPO AGOTADO
+========================= */
+
+function tiempoAgotado() {
+
+if (respondida) return;
+
+respondida = true;
+
+sonidoTiempo();
+
+const p = preguntas[preguntaActual];
+
+const botones =
+document.querySelectorAll("#opciones button");
+
+botones.forEach(boton => {
+    boton.disabled = true;
+});
+
+const mensaje =
+document.getElementById("mensaje");
+
+mensaje.className = "incorrecto";
+
+mensaje.innerHTML = `
+
+<h3>⏰ ¡Tiempo agotado!</h3>
+
+<p>❌ 0 puntos</p>
+
+<p><strong>Respuesta correcta:</strong><br>
+${p.opciones[p.correcta]}
+</p>
+
+<p class="cita">📖 ${p.cita}</p>
+
+<button id="siguienteBtn" onclick="siguientePregunta()">
+➡️ Siguiente pregunta
+</button>
+
 `;
 
 }
 
 
+/* =========================
+   RESPONDER
+========================= */
+
 window.responder = function(indice) {
 
+if (respondida) return;
+
+respondida = true;
+
+clearInterval(intervalo);
+
 const p = preguntas[preguntaActual];
+
+const botones =
+document.querySelectorAll("#opciones button");
+
+botones.forEach(boton => {
+    boton.disabled = true;
+});
+
+
+const mensaje =
+document.getElementById("mensaje");
+
 
 if (indice === p.correcta) {
 
 puntuacion += 10;
 
-alert("✅ ¡Correcto! +10 puntos");
+sonidoCorrecto();
+
+mensaje.className = "correcto";
+
+mensaje.innerHTML = `
+
+<h3>✅ ¡CORRECTO! +10 puntos</h3>
+
+<p>🎯 Muy bien.</p>
+
+<p class="cita">📖 ${p.cita}</p>
+
+<button id="siguienteBtn" onclick="siguientePregunta()">
+➡️ Siguiente pregunta
+</button>
+
+`;
 
 } else {
 
-alert("❌ Incorrecto");
+sonidoIncorrecto();
+
+mensaje.className = "incorrecto";
+
+mensaje.innerHTML = `
+
+<h3>❌ INCORRECTO</h3>
+
+<p><strong>Respuesta correcta:</strong><br>
+${p.opciones[p.correcta]}
+</p>
+
+<p class="cita">📖 ${p.cita}</p>
+
+<button id="siguienteBtn" onclick="siguientePregunta()">
+➡️ Siguiente pregunta
+</button>
+
+`;
 
 }
+
+};
+
+
+/* =========================
+   SIGUIENTE
+========================= */
+
+window.siguientePregunta = function() {
 
 preguntaActual++;
 
@@ -294,6 +725,10 @@ guardarResultado();
 
 };
 
+
+/* =========================
+   GUARDAR RESULTADO
+========================= */
 
 function guardarResultado() {
 
@@ -317,12 +752,19 @@ mostrarResultado();
 })
 .catch((error) => {
 
-alert("Error al guardar el resultado: " + error.message);
+alert(
+"Error al guardar el resultado: " +
+error.message
+);
 
 });
 
 }
 
+
+/* =========================
+   MOSTRAR RESULTADO
+========================= */
 
 function mostrarResultado() {
 
@@ -335,7 +777,7 @@ resultado.style.display = "block";
 
 resultado.innerHTML = `
 
-<h1>🎉 ¡Quiz terminado!</h1>
+<h1>🎉 ¡QUIZ TERMINADO!</h1>
 
 <h2>${nombreEquipo}</h2>
 
@@ -353,10 +795,16 @@ Cargando clasificación...
 
 `;
 
+sonidoGanador();
+
 mostrarClasificacion();
 
 }
 
+
+/* =========================
+   CLASIFICACIÓN
+========================= */
 
 function mostrarClasificacion() {
 
@@ -397,8 +845,8 @@ html += `
 
 <p class="${posicion === 1 ? "primer-lugar" : ""}">
 
-${emoji} ${posicion}. 
-${equipo.equipo} — 
+${emoji} ${posicion}.
+${equipo.equipo} —
 ${equipo.puntuacion} puntos
 
 </p>
@@ -416,4 +864,4 @@ document.getElementById("clasificacion").innerHTML = html;
 </script>
 
 </body>
-</html>
+    </html>
