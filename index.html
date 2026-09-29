@@ -3,9 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Quiz Bíblico - Rut</title>
 
 <style>
+
 body {
     font-family: Arial, sans-serif;
     background: #f4efe6;
@@ -48,8 +50,9 @@ button:hover {
     background: #d6c3a5;
 }
 
-#resultado {
-    text-align: center;
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
 }
 
 input {
@@ -61,6 +64,10 @@ input {
     font-size: 16px;
 }
 
+#resultado {
+    text-align: center;
+}
+
 .primer-lugar {
     font-size: 22px;
     font-weight: bold;
@@ -68,7 +75,7 @@ input {
 
 #temporizador {
     text-align: center;
-    font-size: 28px;
+    font-size: 30px;
     font-weight: bold;
     color: #b22222;
     margin: 15px 0;
@@ -76,7 +83,6 @@ input {
 
 #sonidoBtn {
     background: #d8c3a5;
-    font-size: 15px;
 }
 
 #mensaje {
@@ -97,23 +103,36 @@ input {
     color: #8b0000;
 }
 
+.cita {
+    margin-top: 12px;
+    font-weight: bold;
+}
+
 #siguienteBtn {
     background: #704214;
     color: white;
     font-weight: bold;
 }
 
-.cita {
-    margin-top: 10px;
+.modo-rabino {
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    color: #704214;
+    margin-bottom: 10px;
+}
+
+.boton-jugar {
+    background: #704214;
+    color: white;
     font-weight: bold;
 }
 
-.modo-rabino {
-    color: #704214;
-    font-weight: bold;
-    text-align: center;
-    font-size: 18px;
+.boton-equipo {
+    background: #8a6a44;
+    color: white;
 }
+
 </style>
 </head>
 
@@ -121,17 +140,26 @@ input {
 
 <div class="container">
 
+<!-- =========================
+     INICIO
+========================= -->
+
 <div id="inicio">
 
 <h1>📖 QUIZ BÍBLICO: RUT</h1>
 
-<h3>👥 Competencia por equipos</h3>
+<h3>👥 COMPETENCIA POR EQUIPOS</h3>
 
 <p style="text-align:center;">
 Escribe el nombre de tu equipo para comenzar.
 </p>
 
-<input type="text" id="nombreEquipo" placeholder="Nombre del equipo">
+<input
+type="text"
+id="nombreEquipo"
+placeholder="Nombre del equipo"
+maxlength="30"
+>
 
 <button id="sonidoBtn" onclick="cambiarSonido()">
 🔊 Sonido: ACTIVADO
@@ -143,16 +171,31 @@ Escribe el nombre de tu equipo para comenzar.
 
 </div>
 
+
+<!-- =========================
+     QUIZ
+========================= -->
+
 <div id="quiz" style="display:none;"></div>
+
+
+<!-- =========================
+     RESULTADO
+========================= -->
 
 <div id="resultado" style="display:none;"></div>
 
 </div>
 
+
 <script type="module">
 
-import { initializeApp } from
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+/* =========================
+   FIREBASE
+========================= */
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 import {
     getDatabase,
@@ -160,31 +203,34 @@ import {
     push,
     set,
     onValue
-} from
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
-
-/* =========================
-   FIREBASE
-========================= */
 
 const firebaseConfig = {
 
 apiKey: "AIzaSyDKZZobSUGwY8j_6btwH4YifDsZgPTh-ms",
 
-authDomain: "quiz-biblico-rut-1281f.firebaseapp.com",
+authDomain:
+"quiz-biblico-rut-1281f.firebaseapp.com",
 
-databaseURL: "https://quiz-biblico-rut-1281f-default-rtdb.firebaseio.com",
+databaseURL:
+"https://quiz-biblico-rut-1281f-default-rtdb.firebaseio.com",
 
-projectId: "quiz-biblico-rut-1281f",
+projectId:
+"quiz-biblico-rut-1281f",
 
-storageBucket: "quiz-biblico-rut-1281f.firebasestorage.app",
+storageBucket:
+"quiz-biblico-rut-1281f.firebasestorage.app",
 
-messagingSenderId: "379404224053",
+messagingSenderId:
+"379404224053",
 
-appId: "1:379404224053:web:e9c9439d62f3898197937c"
+appId:
+"1:379404224053:web:e9c9439d62f3898197937c"
 
 };
+
 
 const app = initializeApp(firebaseConfig);
 
@@ -198,123 +244,186 @@ const db = getDatabase(app);
 const preguntas = [
 
 {
-pregunta: "¿Por qué salió la familia de Noemí de Belén hacia Moab?",
+pregunta:
+"¿Por qué salió la familia de Noemí de Belén hacia Moab?",
+
 opciones: [
 "Por guerra",
 "Por hambre",
 "Por enfermedad",
 "Por sequía"
 ],
+
 correcta: 1,
-cita: "Rut 1:1"
+
+cita:
+"Rut 1:1"
 },
 
+
 {
-pregunta: "¿Qué declaró Rut a Noemí al decidir quedarse con ella?",
+pregunta:
+"¿Qué declaró Rut a Noemí al decidir quedarse con ella?",
+
 opciones: [
 "Tu casa será mi casa",
 "Tu tierra será mi tierra",
 "Tu familia será mi familia",
 "Tu pueblo será mi pueblo"
 ],
+
 correcta: 3,
-cita: "Rut 1:16"
+
+cita:
+"Rut 1:16"
 },
 
+
 {
-pregunta: "¿Qué recogía Rut en los campos al comenzar la cosecha?",
+pregunta:
+"¿Qué recogía Rut en los campos al comenzar la cosecha?",
+
 opciones: [
 "Cebada",
 "Trigo",
 "Uvas",
 "Higos"
 ],
+
 correcta: 0,
-cita: "Rut 2:2–3, 23"
+
+cita:
+"Rut 2:2–3, 23"
 },
 
+
 {
-pregunta: "¿Qué ordenó Booz a sus trabajadores respecto a Rut?",
+pregunta:
+"¿Qué ordenó Booz a sus trabajadores respecto a Rut?",
+
 opciones: [
 "No permitir que recogiera",
 "Enviar a Rut a otro campo",
 "Dejar que espigara y no reprenderla",
 "Entregarle todo el campo"
 ],
+
 correcta: 2,
-cita: "Rut 2:15–16"
+
+cita:
+"Rut 2:15–16"
 },
 
+
 {
-pregunta: "¿Bajo qué protección dijo Booz que Rut había venido a refugiarse?",
+pregunta:
+"¿Bajo qué protección dijo Booz que Rut había venido a refugiarse?",
+
 opciones: [
 "Bajo la casa de Israel",
 "Bajo las alas de Jehová",
 "Bajo la protección de Noemí",
 "Bajo la autoridad de Booz"
 ],
+
 correcta: 1,
-cita: "Rut 2:12"
+
+cita:
+"Rut 2:12"
 },
 
+
 {
-pregunta: "¿Qué pidió Rut a Booz al decir: «Extiende el borde de tu capa sobre tu sierva»?",
+pregunta:
+"¿Qué pidió Rut a Booz al decir: «Extiende el borde de tu capa sobre tu sierva»?",
+
 opciones: [
 "Protección",
 "Redención",
 "Matrimonio",
 "Todas las anteriores"
 ],
+
 correcta: 1,
-cita: "Rut 3:9"
+
+cita:
+"Rut 3:9"
 },
 
+
 {
-pregunta: "¿Por qué el pariente más cercano no quiso redimir la heredad?",
+pregunta:
+"¿Por qué el pariente más cercano no quiso redimir la heredad?",
+
 opciones: [
 "Porque no conocía a Rut",
 "Porque no tenía dinero",
 "Porque Booz tenía mayor autoridad",
 "Porque temía perjudicar su heredad"
 ],
+
 correcta: 3,
-cita: "Rut 4:5–6"
+
+cita:
+"Rut 4:5–6"
 },
 
+
 {
-pregunta: "¿Qué objeto se utilizó como señal para confirmar la transacción?",
+pregunta:
+"¿Qué objeto se utilizó como señal para confirmar la transacción?",
+
 opciones: [
 "Una sandalia",
 "Un anillo",
 "Un manto",
 "Una vara"
 ],
+
 correcta: 0,
-cita: "Rut 4:7–8"
+
+cita:
+"Rut 4:7–8"
 },
 
+
 {
-pregunta: "¿Quién fue la madre de Booz?",
+pregunta:
+"¿Quién fue la madre de Booz?",
+
 opciones: [
 "Rut",
 "Noemí",
 "Rahab",
 "Abigail"
 ],
+
 correcta: 2,
-cita: "Mateo 1:5"
+
+cita:
+"Mateo 1:5"
 },
 
+
 {
-pregunta: "👑 MODO RABINO: ¿Cuál es la línea correcta desde Rut hasta Jesús?",
+pregunta:
+"¿Cuál es el orden correcto desde Rut hasta Jesús?",
+
 opciones: [
 "Rut → Booz → Isaí → Obed → David → Jesús",
+
 "Rut → Obed → Booz → David → Isaí → Jesús",
+
 "Rut → Booz → Obed → Isaí → David → Jesús",
+
 "Rut → Booz → David → Obed → Isaí → Jesús"
 ],
+
 correcta: 2,
-cita: "Rut 4:17–22; Mateo 1:5–6, 16"
+
+cita:
+"Rut 4:17–22; Mateo 1:5–6, 16"
+
 }
 
 ];
@@ -325,45 +434,74 @@ cita: "Rut 4:17–22; Mateo 1:5–6, 16"
 ========================= */
 
 let preguntaActual = 0;
+
 let puntuacion = 0;
+
 let nombreEquipo = "";
+
 let tiempoRestante = 0;
+
 let intervalo = null;
+
 let respondida = false;
+
 let sonidoActivado = true;
+
 let audioContext = null;
 
 
 /* =========================
-   SONIDOS
+   INICIAR AUDIO
 ========================= */
 
 function iniciarAudio() {
 
 if (!audioContext) {
-    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+audioContext =
+new (window.AudioContext ||
+window.webkitAudioContext)();
+
 }
 
 if (audioContext.state === "suspended") {
-    audioContext.resume();
-}
+
+audioContext.resume();
 
 }
 
+}
 
-function sonidoNota(frecuencia, duracion, tipo = "sine") {
+
+/* =========================
+   SONIDO
+========================= */
+
+function sonidoNota(
+frecuencia,
+duracion,
+tipo = "sine"
+) {
 
 if (!sonidoActivado) return;
 
 iniciarAudio();
 
-const oscilador = audioContext.createOscillator();
-const ganancia = audioContext.createGain();
+const oscilador =
+audioContext.createOscillator();
+
+const ganancia =
+audioContext.createGain();
 
 oscilador.type = tipo;
-oscilador.frequency.value = frecuencia;
 
-ganancia.gain.setValueAtTime(0.15, audioContext.currentTime);
+oscilador.frequency.value =
+frecuencia;
+
+ganancia.gain.setValueAtTime(
+0.15,
+audioContext.currentTime
+);
 
 ganancia.gain.exponentialRampToValueAtTime(
 0.001,
@@ -371,7 +509,10 @@ audioContext.currentTime + duracion
 );
 
 oscilador.connect(ganancia);
-ganancia.connect(audioContext.destination);
+
+ganancia.connect(
+audioContext.destination
+);
 
 oscilador.start();
 
@@ -382,68 +523,126 @@ audioContext.currentTime + duracion
 }
 
 
+/* =========================
+   SONIDO CORRECTO
+========================= */
+
 function sonidoCorrecto() {
 
 if (!sonidoActivado) return;
 
 sonidoNota(523, 0.15);
-setTimeout(() => sonidoNota(659, 0.15), 120);
-setTimeout(() => sonidoNota(784, 0.25), 240);
+
+setTimeout(
+() => sonidoNota(659, 0.15),
+120
+);
+
+setTimeout(
+() => sonidoNota(784, 0.25),
+240
+);
 
 }
 
+
+/* =========================
+   SONIDO INCORRECTO
+========================= */
 
 function sonidoIncorrecto() {
 
 if (!sonidoActivado) return;
 
-sonidoNota(220, 0.25, "sawtooth");
-setTimeout(() => sonidoNota(165, 0.35, "sawtooth"), 180);
+sonidoNota(
+220,
+0.25,
+"sawtooth"
+);
+
+setTimeout(
+() => sonidoNota(
+165,
+0.35,
+"sawtooth"
+),
+180
+);
 
 }
 
+
+/* =========================
+   SONIDO TIEMPO
+========================= */
 
 function sonidoTiempo() {
 
 if (!sonidoActivado) return;
 
 sonidoNota(300, 0.2);
-setTimeout(() => sonidoNota(200, 0.3), 220);
+
+setTimeout(
+() => sonidoNota(200, 0.3),
+220
+);
 
 }
 
+
+/* =========================
+   SONIDO GANADOR
+========================= */
 
 function sonidoGanador() {
 
 if (!sonidoActivado) return;
 
 sonidoNota(523, 0.15);
-setTimeout(() => sonidoNota(659, 0.15), 150);
-setTimeout(() => sonidoNota(784, 0.15), 300);
-setTimeout(() => sonidoNota(1046, 0.45), 450);
+
+setTimeout(
+() => sonidoNota(659, 0.15),
+150
+);
+
+setTimeout(
+() => sonidoNota(784, 0.15),
+300
+);
+
+setTimeout(
+() => sonidoNota(1046, 0.45),
+450
+);
 
 }
 
 
 /* =========================
-   SONIDO ACTIVAR/DESACTIVAR
+   ACTIVAR / DESACTIVAR
 ========================= */
 
 window.cambiarSonido = function() {
 
-sonidoActivado = !sonidoActivado;
+sonidoActivado =
+!sonidoActivado;
 
-const boton = document.getElementById("sonidoBtn");
+const boton =
+document.getElementById(
+"sonidoBtn"
+);
 
 if (sonidoActivado) {
 
-boton.innerHTML = "🔊 Sonido: ACTIVADO";
+boton.innerHTML =
+"🔊 Sonido: ACTIVADO";
 
 iniciarAudio();
 
 } else {
 
-boton.innerHTML = "🔇 Sonido: DESACTIVADO";
+boton.innerHTML =
+"🔇 Sonido: DESACTIVADO";
 
 }
 
@@ -451,27 +650,39 @@ boton.innerHTML = "🔇 Sonido: DESACTIVADO";
 
 
 /* =========================
-   COMENZAR
+   COMENZAR QUIZ
 ========================= */
 
 window.comenzarQuiz = function() {
 
 nombreEquipo =
-document.getElementById("nombreEquipo").value.trim();
+document.getElementById(
+"nombreEquipo"
+).value.trim();
+
 
 if (nombreEquipo === "") {
 
-alert("⚠️ Escribe primero el nombre del equipo.");
+alert(
+"⚠️ Escribe primero el nombre del equipo."
+);
 
 return;
 
 }
 
+
 iniciarAudio();
 
-document.getElementById("inicio").style.display = "none";
+document.getElementById(
+"inicio"
+).style.display = "none";
 
-document.getElementById("quiz").style.display = "block";
+
+document.getElementById(
+"quiz"
+).style.display = "block";
+
 
 mostrarPregunta();
 
@@ -479,21 +690,34 @@ mostrarPregunta();
 
 
 /* =========================
-   TIEMPO
+   TIEMPO SEGÚN PREGUNTA
 ========================= */
 
 function obtenerTiempo() {
 
+/*
+Preguntas 1–3 = 10 segundos
+Preguntas 4–6 = 12 segundos
+Preguntas 7–9 = 15 segundos
+Pregunta 10 = 20 segundos
+*/
+
 if (preguntaActual <= 2) {
-    return 10;
+
+return 10;
+
 }
 
 if (preguntaActual <= 5) {
-    return 12;
+
+return 12;
+
 }
 
 if (preguntaActual <= 8) {
-    return 15;
+
+return 15;
+
 }
 
 return 20;
@@ -511,37 +735,55 @@ clearInterval(intervalo);
 
 respondida = false;
 
-const p = preguntas[preguntaActual];
+const p =
+preguntas[preguntaActual];
 
-tiempoRestante = obtenerTiempo();
+tiempoRestante =
+obtenerTiempo();
 
-const quiz = document.getElementById("quiz");
+
+const quiz =
+document.getElementById("quiz");
+
 
 quiz.innerHTML = `
 
-<h2>Pregunta ${preguntaActual + 1} de ${preguntas.length}</h2>
+<h2>
+Pregunta ${preguntaActual + 1}
+de ${preguntas.length}
+</h2>
 
 <div id="temporizador">
 ⏱️ ${tiempoRestante}
 </div>
 
-${preguntaActual === 9 ? `
-<div class="modo-rabino">
+${
+preguntaActual === 9
+?
+`<div class="modo-rabino">
 👑 MODO RABINO
-</div>
-` : ""}
+</div>`
+:
+""
+}
 
-<h3>${p.pregunta}</h3>
+<h3>
+${p.pregunta}
+</h3>
 
 <div id="opciones">
 
-${p.opciones.map((opcion, indice) => `
+${p.opciones.map(
+(opcion, indice) => `
 
-<button onclick="responder(${indice})">
+<button
+onclick="responder(${indice})"
+>
 ${opcion}
 </button>
 
-`).join("")}
+`
+).join("")}
 
 </div>
 
@@ -560,15 +802,23 @@ iniciarTemporizador();
 
 function iniciarTemporizador() {
 
-intervalo = setInterval(() => {
+intervalo =
+setInterval(() => {
 
 tiempoRestante--;
 
-const reloj = document.getElementById("temporizador");
+const reloj =
+document.getElementById(
+"temporizador"
+);
 
 if (reloj) {
-    reloj.innerHTML = `⏱️ ${tiempoRestante}`;
+
+reloj.innerHTML =
+`⏱️ ${tiempoRestante}`;
+
 }
+
 
 if (tiempoRestante <= 0) {
 
@@ -595,33 +845,60 @@ respondida = true;
 
 sonidoTiempo();
 
-const p = preguntas[preguntaActual];
+
+const p =
+preguntas[preguntaActual];
+
 
 const botones =
-document.querySelectorAll("#opciones button");
+document.querySelectorAll(
+"#opciones button"
+);
 
-botones.forEach(boton => {
-    boton.disabled = true;
-});
+
+botones.forEach(
+boton => {
+boton.disabled = true;
+}
+);
+
 
 const mensaje =
-document.getElementById("mensaje");
+document.getElementById(
+"mensaje"
+);
 
-mensaje.className = "incorrecto";
+
+mensaje.className =
+"incorrecto";
+
 
 mensaje.innerHTML = `
 
-<h3>⏰ ¡Tiempo agotado!</h3>
+<h3>
+⏰ ¡TIEMPO AGOTADO!
+</h3>
 
-<p>❌ 0 puntos</p>
+<p>
+❌ 0 puntos
+</p>
 
-<p><strong>Respuesta correcta:</strong><br>
+<p>
+<strong>
+Respuesta correcta:
+</strong>
+<br>
 ${p.opciones[p.correcta]}
 </p>
 
-<p class="cita">📖 ${p.cita}</p>
+<p class="cita">
+📖 ${p.cita}
+</p>
 
-<button id="siguienteBtn" onclick="siguientePregunta()">
+<button
+id="siguienteBtn"
+onclick="siguientePregunta()"
+>
 ➡️ Siguiente pregunta
 </button>
 
@@ -642,18 +919,28 @@ respondida = true;
 
 clearInterval(intervalo);
 
-const p = preguntas[preguntaActual];
+
+const p =
+preguntas[preguntaActual];
+
 
 const botones =
-document.querySelectorAll("#opciones button");
+document.querySelectorAll(
+"#opciones button"
+);
 
-botones.forEach(boton => {
-    boton.disabled = true;
-});
+
+botones.forEach(
+boton => {
+boton.disabled = true;
+}
+);
 
 
 const mensaje =
-document.getElementById("mensaje");
+document.getElementById(
+"mensaje"
+);
 
 
 if (indice === p.correcta) {
@@ -662,17 +949,28 @@ puntuacion += 10;
 
 sonidoCorrecto();
 
-mensaje.className = "correcto";
+mensaje.className =
+"correcto";
+
 
 mensaje.innerHTML = `
 
-<h3>✅ ¡CORRECTO! +10 puntos</h3>
+<h3>
+✅ ¡CORRECTO! +10 PUNTOS
+</h3>
 
-<p>🎯 Muy bien.</p>
+<p>
+🎯 Muy bien.
+</p>
 
-<p class="cita">📖 ${p.cita}</p>
+<p class="cita">
+📖 ${p.cita}
+</p>
 
-<button id="siguienteBtn" onclick="siguientePregunta()">
+<button
+id="siguienteBtn"
+onclick="siguientePregunta()"
+>
 ➡️ Siguiente pregunta
 </button>
 
@@ -682,19 +980,32 @@ mensaje.innerHTML = `
 
 sonidoIncorrecto();
 
-mensaje.className = "incorrecto";
+mensaje.className =
+"incorrecto";
+
 
 mensaje.innerHTML = `
 
-<h3>❌ INCORRECTO</h3>
+<h3>
+❌ INCORRECTO
+</h3>
 
-<p><strong>Respuesta correcta:</strong><br>
+<p>
+<strong>
+Respuesta correcta:
+</strong>
+<br>
 ${p.opciones[p.correcta]}
 </p>
 
-<p class="cita">📖 ${p.cita}</p>
+<p class="cita">
+📖 ${p.cita}
+</p>
 
-<button id="siguienteBtn" onclick="siguientePregunta()">
+<button
+id="siguienteBtn"
+onclick="siguientePregunta()"
+>
 ➡️ Siguiente pregunta
 </button>
 
@@ -706,14 +1017,18 @@ ${p.opciones[p.correcta]}
 
 
 /* =========================
-   SIGUIENTE
+   SIGUIENTE PREGUNTA
 ========================= */
 
 window.siguientePregunta = function() {
 
 preguntaActual++;
 
-if (preguntaActual < preguntas.length) {
+
+if (
+preguntaActual <
+preguntas.length
+) {
 
 mostrarPregunta();
 
@@ -732,28 +1047,38 @@ guardarResultado();
 
 function guardarResultado() {
 
-const resultadosRef = ref(db, "resultados");
+const resultadosRef =
+ref(db, "resultados");
 
-const nuevoResultado = push(resultadosRef);
+
+const nuevoResultado =
+push(resultadosRef);
+
 
 set(nuevoResultado, {
 
-equipo: nombreEquipo,
+equipo:
+nombreEquipo,
 
-puntuacion: puntuacion,
+puntuacion:
+puntuacion,
 
-fecha: Date.now()
+fecha:
+Date.now()
 
 })
+
 .then(() => {
 
 mostrarResultado();
 
 })
+
 .catch((error) => {
 
 alert(
-"Error al guardar el resultado: " +
+"Error al guardar el resultado: "
++
 error.message
 );
 
@@ -768,32 +1093,65 @@ error.message
 
 function mostrarResultado() {
 
-document.getElementById("quiz").style.display = "none";
+document.getElementById(
+"quiz"
+).style.display = "none";
+
 
 const resultado =
-document.getElementById("resultado");
+document.getElementById(
+"resultado"
+);
 
-resultado.style.display = "block";
+
+resultado.style.display =
+"block";
+
 
 resultado.innerHTML = `
 
-<h1>🎉 ¡QUIZ TERMINADO!</h1>
+<h1>
+🎉 ¡QUIZ TERMINADO!
+</h1>
 
-<h2>${nombreEquipo}</h2>
+<h2>
+${nombreEquipo}
+</h2>
 
-<h2>🏆 ${puntuacion} / 100 puntos</h2>
+<h2>
+🏆 ${puntuacion} / 100 puntos
+</h2>
 
-<p>Tu resultado ha sido guardado.</p>
+<p>
+Tu resultado ha sido guardado.
+</p>
+
+<button
+class="boton-jugar"
+onclick="volverAJugar()"
+>
+🔄 VOLVER A JUGAR
+</button>
+
+<button
+class="boton-equipo"
+onclick="cambiarEquipo()"
+>
+🏠 CAMBIAR EQUIPO
+</button>
 
 <hr>
 
-<h2>🏆 CLASIFICACIÓN</h2>
+<h2>
+🏆 CLASIFICACIÓN
+</h2>
 
 <div id="clasificacion">
 Cargando clasificación...
 </div>
 
 `;
+
 
 sonidoGanador();
 
@@ -803,51 +1161,157 @@ mostrarClasificacion();
 
 
 /* =========================
+   VOLVER A JUGAR
+========================= */
+
+window.volverAJugar = function() {
+
+preguntaActual = 0;
+
+puntuacion = 0;
+
+tiempoRestante = 0;
+
+respondida = false;
+
+clearInterval(intervalo);
+
+
+document.getElementById(
+"resultado"
+).style.display = "none";
+
+
+document.getElementById(
+"quiz"
+).style.display = "block";
+
+
+mostrarPregunta();
+
+};
+
+
+/* =========================
+   CAMBIAR EQUIPO
+========================= */
+
+window.cambiarEquipo = function() {
+
+preguntaActual = 0;
+
+puntuacion = 0;
+
+tiempoRestante = 0;
+
+respondida = false;
+
+clearInterval(intervalo);
+
+
+document.getElementById(
+"resultado"
+).style.display = "none";
+
+
+document.getElementById(
+"quiz"
+).style.display = "none";
+
+
+document.getElementById(
+"inicio"
+).style.display = "block";
+
+
+document.getElementById(
+"nombreEquipo"
+).value = "";
+
+};
+
+
+/* =========================
    CLASIFICACIÓN
 ========================= */
 
 function mostrarClasificacion() {
 
-const resultadosRef = ref(db, "resultados");
+const resultadosRef =
+ref(db, "resultados");
 
-onValue(resultadosRef, (snapshot) => {
 
-const datos = snapshot.val();
+onValue(
+resultadosRef,
+(snapshot) => {
+
+const datos =
+snapshot.val();
+
 
 if (!datos) {
 
-document.getElementById("clasificacion").innerHTML =
+document.getElementById(
+"clasificacion"
+).innerHTML =
 "No hay resultados todavía.";
 
 return;
 
 }
 
-const equipos = Object.values(datos);
 
-equipos.sort((a, b) =>
+const equipos =
+Object.values(datos);
+
+
+equipos.sort(
+(a, b) =>
 b.puntuacion - a.puntuacion
 );
 
+
 let html = "";
 
-equipos.forEach((equipo, indice) => {
 
-let posicion = indice + 1;
+equipos.forEach(
+(equipo, indice) => {
+
+const posicion =
+indice + 1;
+
 
 let emoji = "";
 
-if (posicion === 1) emoji = "🥇";
-if (posicion === 2) emoji = "🥈";
-if (posicion === 3) emoji = "🥉";
+
+if (posicion === 1)
+emoji = "🥇";
+
+if (posicion === 2)
+emoji = "🥈";
+
+if (posicion === 3)
+emoji = "🥉";
+
 
 html += `
 
-<p class="${posicion === 1 ? "primer-lugar" : ""}">
+<p
+class="${
+posicion === 1
+?
+"primer-lugar"
+:
+""
+}"
+>
 
-${emoji} ${posicion}.
-${equipo.equipo} —
-${equipo.puntuacion} puntos
+${emoji}
+${posicion}.
+${equipo.equipo}
+—
+${equipo.puntuacion}
+puntos
 
 </p>
 
@@ -855,13 +1319,19 @@ ${equipo.puntuacion} puntos
 
 });
 
-document.getElementById("clasificacion").innerHTML = html;
 
-});
+document.getElementById(
+"clasificacion"
+).innerHTML =
+html;
+
+}
+
+);
 
 }
 
 </script>
 
 </body>
-    </html>
+</html>
